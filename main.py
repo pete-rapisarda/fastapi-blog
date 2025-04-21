@@ -7,7 +7,7 @@ templates = Jinja2Templates(directory="templates")
 
 posts = [
     {"id":1,"title":"Hello World","content":"This is your first blog post."},
-    {"id":2,"title":"FastAPI ROcks","content":"Building with FastAPI is fun and fast!"}
+    {"id":2,"title":"FastAPI Rocks","content":"Building with FastAPI is fun and fast!"}
 ]
 
 @app.get("/",response_class=HTMLResponse)
