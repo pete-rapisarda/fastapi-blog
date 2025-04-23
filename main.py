@@ -21,10 +21,6 @@ def create_form(request: Request):
 @app.post("/create")
 def create_post(request:Request,title:str = Form(...),content:str=Form(...)):
     if not title.strip() or not content.strip():
-        # You could re-render the form with an error message
-        return templates.TemplateResponse('create.html',{
-            'request':request,
-            'error':'Both title and content are required'
-            })
+        return RedirectResponse("/create?error=missing",status_code=303)
     posts.append({"id":len(posts) + 1, "title":title, "content":content})
     return RedirectResponse("/",status_code=303)
