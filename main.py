@@ -10,15 +10,18 @@ posts = [
     {"id":2,"title":"FastAPI Rocks","content":"Building with FastAPI is fun and fast!"}
 ]
 
-@app.get("/create",response_class=HTMLResponse)
+@app.get("/",response_class=HTMLResponse)
 def home(request:Request):
     return templates.TemplateResponse("index.html",{"request":request,"posts":posts})
 
-@app.post("/",response_class=HTMLResponse)
+@app.get("/create",response_class=HTMLResponse)
 def create_form(request: Request):
     return templates.TemplateResponse("create.html",{"request":request})
 
 @app.post("/create")
-def create_post(request: Request,title: str = Form(...),content:str=Form(...)):
+def create_post(request:Request,title:str = Form(...),content:str=Form(...)):
+    if not title.strip() or not content.strip():
+        # You could re-render the form with an error message
+        return templates.TemplateRespo
     posts.append({"id":len(posts) + 1, "title":title, "content":content})
-    return RedirectResponse("/",status_code="303")
+    return RedirectResponse("/",status_code=303)
