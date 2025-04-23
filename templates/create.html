@@ -5,6 +5,9 @@
     </head>
     <body>
         <h1>Create a new blog post</h1>
+        {% if error %}
+        <p style="color:red;">{{error}}</p>
+        {% endif %}
         <form method="post">
             <label>Title:</label><br>
             <input type="text" name="title"><br><br>
