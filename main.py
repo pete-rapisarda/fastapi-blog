@@ -24,6 +24,9 @@ def create_form(request: Request,error:str=None):
 @app.post("/create")
 def create_post(request:Request,title:str = Form(...),content:str=Form(...)):
     if not title.strip() or not content.strip():
-        return RedirectResponse("/create?error=missing",status_code=303)
+        return RedirectResponse(
+            f"/create?error=missing&title={title}&content={content}",
+            status_code=303
+            )
     posts.append({"id":len(posts) + 1, "title":title, "content":content})
     return RedirectResponse("/",status_code=303)
