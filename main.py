@@ -15,8 +15,11 @@ def home(request:Request):
     return templates.TemplateResponse("index.html",{"request":request,"posts":posts})
 
 @app.get("/create",response_class=HTMLResponse)
-def create_form(request: Request):
-    return templates.TemplateResponse("create.html",{"request":request})
+def create_form(request: Request,error:str=None):
+    return templates.TemplateResponse("create.html",{
+        "request":request,
+        "error":error
+        })
 
 @app.post("/create")
 def create_post(request:Request,title:str = Form(...),content:str=Form(...)):
