@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Request, Form
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
+from storage import load_posts, save_posts
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
