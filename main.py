@@ -28,6 +28,10 @@ def create_post(request:Request,title:str = Form(...),content:str=Form(...)):
             f"/create?error=missing&title={title}&content={content}",
             status_code=303
             )
-    posts.append({"id":len(posts) + 1, "title":title, "content":content})
+    posts.append({
+        "id":len(posts) + 1,
+        "title":title,
+        "content":content
+        })
     save_posts(posts)
     return RedirectResponse("/",status_code=303)
