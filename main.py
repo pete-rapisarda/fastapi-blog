@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request, Form
+from fastapi import FastAPI, HTTPException, Request, Form
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from storage import load_posts, save_posts
@@ -35,3 +35,14 @@ def create_post(request:Request,title:str = Form(...),content:str=Form(...)):
         })
     save_posts(posts)
     return RedirectResponse("/",status_code=303)
+
+@app.get("/posts/{post_id}",response_class=HTMLResponse)
+def read_post(post_id:int,request:Request):
+    post = next((p for p in posts if p["id"] == post_id),None)
+    if post is None:
+        raise HTTPException(status_code=404,detail="Post not found")
+    return templates.TemplateResponse("post.html",{"request":request,"post":post})
+
+@app.exception_handler(404)
+async def custom_404_handler(request: Request, exec: HTTPException):
+    return templates.TemplateResponse("404.html",{"request":request},status_code=404)
