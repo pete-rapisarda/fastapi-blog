@@ -1,14 +1,12 @@
 from fastapi import FastAPI, Request, Form
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
+from storage import load_posts, save_posts
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
 
-posts = [
-    {"id":1,"title":"Hello World","content":"This is your first blog post."},
-    {"id":2,"title":"FastAPI Rocks","content":"Building with FastAPI is fun and fast!"}
-]
+posts = load_posts()
 
 @app.get("/",response_class=HTMLResponse)
 def home(request:Request):
@@ -30,5 +28,10 @@ def create_post(request:Request,title:str = Form(...),content:str=Form(...)):
             f"/create?error=missing&title={title}&content={content}",
             status_code=303
             )
-    posts.append({"id":len(posts) + 1, "title":title, "content":content})
+    posts.append({
+        "id":len(posts) + 1,
+        "title":title,
+        "content":content
+        })
+    save_posts(posts)
     return RedirectResponse("/",status_code=303)

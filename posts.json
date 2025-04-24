@@ -1,7 +1,12 @@
 [
-    {
-        "id":1,
-        "title":"Hello World",
-        "content":"This is your first blog post"
-    }
+  {
+    "id": 1,
+    "title": "Hello World",
+    "content": "This is your first blog post"
+  },
+  {
+    "id": 2,
+    "title": "test",
+    "content": "Here's my real first post"
+  }
 ]
