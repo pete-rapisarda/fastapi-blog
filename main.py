@@ -42,5 +42,7 @@ def read_post(post_id:int,request:Request):
     if post is None:
         raise HTTPException(status_code=404,detail="Post not found")
     return templates.TemplateResponse("post.html",{"request":request,"post":post})
-    if not post:
-        return templates.TemplateResponse("404.html")
+
+@app.exception_handler(404)
+async def custom_404_handler(request: Request, exec: HTTPException):
+    return templates.TemplateResponse("404.html",{"request":request},status_code=404)
