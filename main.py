@@ -57,7 +57,7 @@ def edit_form(post_id:int,request:Request):
         "post":post
     })
 
-@app.post("posts/{post_id}/edit")
+@app.post("/posts/{post_id}/edit")
 def update_post(
     post_id:int,
     title:str = Form(...),
@@ -69,4 +69,4 @@ def update_post(
             post["content"] = content
             save_posts(posts)
             break
-        return RedirectResponse("/",status_code=303)
+    return RedirectResponse("/",status_code=303)
