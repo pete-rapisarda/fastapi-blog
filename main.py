@@ -46,3 +46,13 @@ def read_post(post_id:int,request:Request):
 @app.exception_handler(404)
 async def custom_404_handler(request: Request, exec: HTTPException):
     return templates.TemplateResponse("404.html",{"request":request},status_code=404)
+
+@app.get("/posts/{post_id}/edit",response_class=HTMLResponse)
+def edit_form(post_id:int,request:Request):
+    post = next((p for p in posts if p["id"] == post_id),None)
+    if not post:
+        raise HTTPException(status_code=404,detail="Post not found")
+    return templates.TemplateResponse("edit.html",{
+        "request":request,
+        "post":post
+    })
