@@ -11,7 +11,10 @@
                 <p>{{post.content}}</p>
                 <a href="/">Back to Home</a>
                 <a href="/posts/{{post.id}}/edit">Edit</a>
-                <!---Adding comments so I can draft a PR for delete button feature.-->
+                <form action="/posts/{{post.id}}/delete" method="post" onsubmit="return confirm(
+                    'Are you sure you want to delete this post?');">
+                    <button type="submit">Delete</button>
+                    </form>
             </li>
         </ul>
     </body>
