@@ -70,3 +70,10 @@ def update_post(
             save_posts(posts)
             break
     return RedirectResponse("/",status_code=303)
+
+@app.post("/posts/{post_id}/delete")
+def delete_post(post_id:int):
+    global posts
+    posts = [p for p in posts if p["id"] != post_id]
+    save_posts(posts)
+    return RedirectResponse("/",status_code=303)
