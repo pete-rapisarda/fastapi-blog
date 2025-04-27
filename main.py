@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException, Request, Form
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
-from storage import load_posts, save_posts
+from storage import load_posts, save_posts, load_deleted_posts, save_deleted_posts
 from starlette.middleware.sessions import SessionMiddleware
 
 app = FastAPI()
@@ -76,7 +76,14 @@ def update_post(
 @app.post("/posts/{post_id}/delete")
 def delete_post(post_id:int,request:Request):
     global posts
-    posts = [p for p in posts if p["id"] != post_id]
-    save_posts(posts)
-    request.session["flash"] = "Post deleted successfully!"
+    post_to_delete = next((p for p in posts if p["id"] == post_id),None)
+    if post_to_delete:
+        posts = [p for p in posts if p["id"] != post_id]
+        save_posts(posts)
+        deleted = load_deleted_posts()
+        deleted.append(post_to_delete)
+        save_deleted_posts(deleted)
+        request.session["flash"] = "Post archived successfully!"
+    else:
+        raise HTTPException(status_code=404, detail="Post not found")
     return RedirectResponse("/",status_code=303)
