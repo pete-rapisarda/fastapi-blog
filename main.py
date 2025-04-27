@@ -2,12 +2,11 @@ from fastapi import FastAPI, HTTPException, Request, Form
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from storage import load_posts, save_posts
-from fastapi.middleware.session import SessionMiddleware
-
-app.add_middleware(SessionMiddleware, secret_key="supersecretkey")
+from starlette.middleware.sessions import SessionMiddleware
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
+app.add_middleware(SessionMiddleware, secret_key="supersecretkey")
 
 posts = load_posts()
 
@@ -75,7 +74,7 @@ def update_post(
     return RedirectResponse("/",status_code=303)
 
 @app.post("/posts/{post_id}/delete")
-def delete_post(post_id:int):
+def delete_post(post_id:int,request:Request):
     global posts
     posts = [p for p in posts if p["id"] != post_id]
     save_posts(posts)
