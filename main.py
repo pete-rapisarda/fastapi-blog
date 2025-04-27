@@ -2,6 +2,9 @@ from fastapi import FastAPI, HTTPException, Request, Form
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from storage import load_posts, save_posts
+from fastapi.middleware.session import SessionMiddleware
+
+app.add_middleware(SessionMiddleware, secret_key="supersecretkey")
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
@@ -76,4 +79,5 @@ def delete_post(post_id:int):
     global posts
     posts = [p for p in posts if p["id"] != post_id]
     save_posts(posts)
+    request.session["flash"] = "Post deleted successfully!"
     return RedirectResponse("/",status_code=303)

@@ -5,6 +5,10 @@
     </head>
     <body>
         <h1>My Blog</h1>
+        {% if reuqest.session.get('flash') %}
+        <div class="flash-message">{{request.session.get('flash')}}></div>
+        {% set_=request.session.pop('flash') %}
+        {% endif %}
         <a href="/create">Create new blog post</a>
         <ul>
             {% for post in posts %}
