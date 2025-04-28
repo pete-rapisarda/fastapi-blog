@@ -8,7 +8,7 @@ To run this project locally:
 
 1. Clone the repository:
 
-   git clone https://github.com/yourusername/fastapi-blog.git
+   git clone https://github.com/pete-rapisarda/fastapi-blog.git
    cd fastapi-blog
 
 2. Create and activate a virtual environment:
