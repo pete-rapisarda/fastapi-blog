@@ -8,11 +8,11 @@
         {% if error == "missing" %}
         <p style="color:red;">Title and content are required.</p>
         {% endif %}
-        <form method="post">
+        <form action="/create" method="post">
             <label>Title:</label><br>
-            <input type="text" name="title" value="{{title}}"><br><br>
+            <input type="text" name="title" value="{{title}}" placeholder="Title" required><br><br>
             <label>Content:</label><br>
-            <textarea name="content" rows="4" cols="50>">{{content}}</textarea><br><br>
+            <textarea name="content" rows="4" cols="50>" placeholder="Content" required>{{content}}</textarea><br><br>
             <button type="submit">Submit</button>
         </form>
         <br>
