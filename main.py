@@ -3,10 +3,16 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from storage import load_posts, save_posts, load_deleted_posts, save_deleted_posts
 from starlette.middleware.sessions import SessionMiddleware
+from dotenv import load_dotenv
+import os
+load_dotenv()
 
+secret_key = os.getenv("SECRET_KEY")
+if not secret_key:
+    raise ValueError("SECRET_KEY environment variable not set")
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
-app.add_middleware(SessionMiddleware, secret_key="supersecretkey")
+app.add_middleware(SessionMiddleware, secret_key=secret_key)
 
 posts = load_posts()
 
