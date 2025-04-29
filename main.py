@@ -71,6 +71,18 @@ def update_post(
     title:str = Form(...),
     content:str = Form(...)
 ):
+    if not title.strip() or not content.strip():
+        post = next((p for p in posts if p["id"] == post_id),None)
+        if not post:
+            raise HTTPException(status_code=404,detail="Post not found")
+        return templates.TemplateResponse(
+            "edit.html",
+            {
+                "request":request,
+                "post":post,
+                "error":"Title and content cannot be empty"
+            }
+        )
     for post in posts:
         if post["id"] == post_id:
             post["title"] = title
