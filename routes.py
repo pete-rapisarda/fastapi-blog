@@ -20,7 +20,7 @@ def create_form(request: Request,error:str=None,title:str="",content:str=""):
         })
 
 @router.post("/create")
-def create_post(request:Request,title:str = Form(...),content:str=Form(...)):
+def create_post(request:Request,title:str = Form(...),content:str=Form(...)) -> RedirectResponse:
     if not title.strip() or not content.strip():
         return RedirectResponse(
             f"/create?error=missing&title={title}&content={content}",
@@ -79,7 +79,7 @@ def update_post(
     return RedirectResponse("/",status_code=303)
 
 @router.post("/posts/{post_id}/delete")
-def delete_post(post_id:int,request:Request):
+def delete_post(post_id:int,request:Request) -> RedirectResponse:
     global posts
     post_to_delete = next((p for p in posts if p["id"] == post_id),None)
     if post_to_delete:
