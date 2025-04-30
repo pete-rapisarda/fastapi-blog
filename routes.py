@@ -1,9 +1,8 @@
 from fastapi import FastAPI, HTTPException, Request, Form, APIRouter
 from storage import load_posts, save_posts, load_deleted_posts, save_deleted_posts
 from fastapi.responses import HTMLResponse, RedirectResponse
-from fastapi.templating import Jinja2Templates
+from utils import templates
 
-templates = Jinja2Templates(directory="templates")
 posts = load_posts()
 router = APIRouter()
 
@@ -41,10 +40,6 @@ def read_post(post_id:int,request:Request):
     if post is None:
         raise HTTPException(status_code=404,detail="Post not found")
     return templates.TemplateResponse("post.html",{"request":request,"post":post})
-
-@router.exception_handler(404)
-async def custom_404_handler(request: Request, exc: HTTPException):
-    return templates.TemplateResponse("404.html",{"request":request},status_code=404)
 
 @router.get("/posts/{post_id}/edit",response_class=HTMLResponse)
 def edit_form(post_id:int,request:Request):
