@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+from models import Post
 
 DATA_FILE = Path("posts.json")
 DELETED_FILE = Path("deleted_posts.json")
@@ -7,8 +8,11 @@ DELETED_FILE = Path("deleted_posts.json")
 def load_posts():
     if DATA_FILE.exists():
         with open(DATA_FILE,"r") as f:
-            return json.load(f)
-        return[]
+            post_data = json.load(f)
+            posts = []
+            for data in post_data:
+                posts.append(Post(**data))
+        return posts
 
 def save_posts(posts):
     with open(DATA_FILE,"w") as f:
