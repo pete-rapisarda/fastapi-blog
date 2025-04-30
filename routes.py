@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException, Request, Form, APIRouter
 from storage import load_posts, save_posts, load_deleted_posts, save_deleted_posts
 from fastapi.responses import HTMLResponse, RedirectResponse
-from utils import templates
+from utils import templates, set_flash
 
 posts = load_posts()
 router = APIRouter()
@@ -88,7 +88,7 @@ def delete_post(post_id:int,request:Request):
         deleted = load_deleted_posts()
         deleted.append(post_to_delete)
         save_deleted_posts(deleted)
-        request.session["flash"] = "Post archived successfully!"
+        set_flash(request,"Post archived successfully!")
     else:
         raise HTTPException(status_code=404, detail="Post not found")
     return RedirectResponse("/",status_code=303)
