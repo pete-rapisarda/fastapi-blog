@@ -1,1 +1,1 @@
-users = {'admin','P@$$w0rd'}
+users = {'admin':'P@$$w0rd'}

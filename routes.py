@@ -102,9 +102,10 @@ def login_form(request:Request,error:str=None):
     })
 
 @router.post("/login")
-def login(username:str = Form(...),password:str = Form(...)) -> RedirectResponse:
-    # if username and password not match from auth.py
-    return RedirectResponse(
-        f"/login?error=invalid",
-        status_code=303
-    )
+def login(request:Request,username:str = Form(...),password:str = Form(...)) -> RedirectResponse:
+    stored_password = users.get(username)
+    if stored_password is None or stored_password != password:
+        return RedirectResponse(f"/login?error=invalid",status_code=303)
+    else:
+        request.session["username"] = username
+        return RedirectResponse(f"/",status_code=303)
