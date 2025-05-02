@@ -5,6 +5,11 @@
     </head>
     <body>
         <h1>My Blog</h1>
+        {% if request.session.get('username') %}
+        <a href="/logout">Logout</a>
+        {% else %}
+        <a href="/login">Login</a>
+        {% endif %}
         {% if request.session.get('flash') %}
         <div class="flash-message">{{request.session.get('flash')}}></div>
         {% set msg=request.session.pop('flash') %}
