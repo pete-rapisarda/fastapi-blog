@@ -109,3 +109,9 @@ def login(request:Request,username:str = Form(...),password:str = Form(...)) -> 
     else:
         request.session["username"] = username
         return RedirectResponse(f"/",status_code=303)
+    
+@router.post("/logout")
+def logout(request:Request,username:str) -> RedirectResponse:
+    request.session.pop("username",None)
+    set_flash(request,"Logout successfull")
+    return RedirectResponse(f"/login",status_code=303)
