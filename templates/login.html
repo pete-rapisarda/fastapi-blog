@@ -8,6 +8,10 @@
         {% if error == "invalid" %}
         <p style="color:red;">Invalid username or password.</p>
         {% endif %}
+        {% if request.session.get('flash') %}
+        <div class="flash-message">{{request.session.get('flash')}}</div>
+        {% set msg=request.session.pop('flash') %}
+        {% endif %}
         <form action="/login" method="post">
             <label>Username:</label><br>
             <input type="text" name="username" placeholder="Username" required><br><br>
