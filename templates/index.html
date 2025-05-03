@@ -15,7 +15,7 @@
         </form>
         {% endif %}
         {% if request.session.get('flash') %}
-        <div class="flash-message">{{request.session.get('flash')}}></div>
+        <div class="flash-message">{{request.session.get('flash')}}</div>
         {% set msg=request.session.pop('flash') %}
         {% endif %}
         <a href="/create">Create new blog post</a>
