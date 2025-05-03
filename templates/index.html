@@ -5,6 +5,15 @@
     </head>
     <body>
         <h1>My Blog</h1>
+        {% if request.session.get('username') %}
+        <form action="/logout" method="post">
+            <button type="submit">Logout</button><br><br>
+        </form>
+        {% else %}
+        <form action="/login" method="get">
+            <button type="submit">Login</button><br><br>
+        </form>
+        {% endif %}
         {% if request.session.get('flash') %}
         <div class="flash-message">{{request.session.get('flash')}}></div>
         {% set msg=request.session.pop('flash') %}

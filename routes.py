@@ -2,6 +2,7 @@ from fastapi import FastAPI, HTTPException, Request, Form, APIRouter
 from storage import load_posts, save_posts, load_deleted_posts, save_deleted_posts
 from fastapi.responses import HTMLResponse, RedirectResponse
 from utils import templates, set_flash
+from auth import users
 
 posts = load_posts()
 router = APIRouter()
@@ -92,3 +93,26 @@ def delete_post(post_id:int,request:Request) -> RedirectResponse:
     else:
         raise HTTPException(status_code=404, detail="Post not found")
     return RedirectResponse("/",status_code=303)
+
+@router.get("/login",response_class=HTMLResponse)
+def login_form(request:Request,error:str=None):
+    return templates.TemplateResponse("login.html",{
+        "request":request,
+        "error":error
+    })
+
+@router.post("/login")
+def login(request:Request,username:str = Form(...),password:str = Form(...)) -> RedirectResponse:
+    stored_password = users.get(username)
+    if stored_password is None or stored_password != password:
+        return RedirectResponse(f"/login?error=invalid",status_code=303)
+    else:
+        request.session["username"] = username
+        set_flash(request,"Login successful!  Welcome" + username + "!")
+        return RedirectResponse(f"/",status_code=303)
+    
+@router.post("/logout")
+def logout(request:Request) -> RedirectResponse:
+    request.session.pop("username",None)
+    set_flash(request,"Logout successfull")
+    return RedirectResponse(f"/login",status_code=303)
