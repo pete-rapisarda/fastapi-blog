@@ -42,8 +42,8 @@ def read_post(post_id:int,request:Request):
         raise HTTPException(status_code=404,detail="Post not found")
     return templates.TemplateResponse("post.html",{"request":request,"post":post})
 
-@router.get("/posts/{post_id}/edit",response_class=HTMLResponse,login=Depends(require_login))
-def edit_form(post_id:int,request:Request):
+@router.get("/posts/{post_id}/edit",response_class=HTMLResponse)
+def edit_form(post_id:int,request:Request,login=Depends(require_login)):
     post = next((p for p in posts if p["id"] == post_id),None)
     if not post:
         raise HTTPException(status_code=404,detail="Post not found")
