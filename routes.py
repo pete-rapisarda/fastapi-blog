@@ -1,7 +1,7 @@
-from fastapi import FastAPI, HTTPException, Request, Form, APIRouter
+from fastapi import FastAPI, HTTPException, Request, Form, APIRouter, Depends
 from storage import load_posts, save_posts, load_deleted_posts, save_deleted_posts
 from fastapi.responses import HTMLResponse, RedirectResponse
-from utils import templates, set_flash
+from utils import templates, set_flash, require_login
 from auth import users
 
 posts = load_posts()
@@ -21,7 +21,7 @@ def create_form(request: Request,error:str=None,title:str="",content:str=""):
         })
 
 @router.post("/create")
-def create_post(request:Request,title:str = Form(...),content:str=Form(...)) -> RedirectResponse:
+def create_post(request:Request,title:str = Form(...),content:str=Form(...),login = Depends(require_login)) -> RedirectResponse:
     if not title.strip() or not content.strip():
         return RedirectResponse(
             f"/create?error=missing&title={title}&content={content}",
@@ -42,7 +42,7 @@ def read_post(post_id:int,request:Request):
         raise HTTPException(status_code=404,detail="Post not found")
     return templates.TemplateResponse("post.html",{"request":request,"post":post})
 
-@router.get("/posts/{post_id}/edit",response_class=HTMLResponse)
+@router.get("/posts/{post_id}/edit",response_class=HTMLResponse,login=Depends(require_login))
 def edit_form(post_id:int,request:Request):
     post = next((p for p in posts if p["id"] == post_id),None)
     if not post:
@@ -57,7 +57,8 @@ def update_post(
     post_id:int,
     request:Request,
     title:str = Form(...),
-    content:str = Form(...)
+    content:str = Form(...),
+    login=Depends(require_login)
 ):
     if not title.strip() or not content.strip():
         post = next((p for p in posts if p["id"] == post_id),None)
@@ -80,7 +81,7 @@ def update_post(
     return RedirectResponse("/",status_code=303)
 
 @router.post("/posts/{post_id}/delete")
-def delete_post(post_id:int,request:Request) -> RedirectResponse:
+def delete_post(post_id:int,request:Request,login=Depends(require_login)) -> RedirectResponse:
     global posts
     post_to_delete = next((p for p in posts if p["id"] == post_id),None)
     if post_to_delete:
